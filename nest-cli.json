@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/api/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/api/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/api",
+  "projects": {
+    "api": {
+      "type": "application",
+      "root": "apps/api",
+      "entryFile": "main",
+      "sourceRoot": "apps/api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api/tsconfig.app.json"
+      }
+    },
+    "dal": {
+      "type": "library",
+      "root": "libs/dal",
+      "entryFile": "index",
+      "sourceRoot": "libs/dal/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dal/tsconfig.lib.json"
+      }
+    },
+    "app-generic": {
+      "type": "library",
+      "root": "libs/app-generic",
+      "entryFile": "index",
+      "sourceRoot": "libs/app-generic/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/app-generic/tsconfig.lib.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    },
+    "worker": {
+      "type": "application",
+      "root": "apps/worker",
+      "entryFile": "main",
+      "sourceRoot": "apps/worker/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/worker/tsconfig.app.json"
+      }
+    },
+    "migration": {
+      "type": "application",
+      "root": "apps/migration",
+      "entryFile": "main",
+      "sourceRoot": "apps/migration/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/migration/tsconfig.app.json"
+      }
+    },
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    }
+  },
+  "generateOptions": {
+    "spec": false
+  }
+}

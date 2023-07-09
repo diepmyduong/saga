@@ -1,0 +1,7 @@
+{
+  "ADMIN": [["allow", "manage", "all"]],
+  "USER": [
+    ["allow", "manage", "user_own"],
+    ["allow", "findAll findOne", "catalog"]
+  ]
+}
