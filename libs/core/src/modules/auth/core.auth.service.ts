@@ -86,9 +86,7 @@ export class CoreAuthService {
       { expiresIn: JWT_CONFIG.refreshExpiresIn }
     );
 
-    const accessToken = await this.jwtService.sign(payload, {
-      expiresIn: JWT_CONFIG.signExpiresIn,
-    });
+    const accessToken = await this.getAccessToken(payload);
 
     // save refresh token to user
     await this.userRepository.updateOne({ _id: payload.userId }, { refreshToken: hashedPassword });
@@ -97,6 +95,13 @@ export class CoreAuthService {
       accessToken: accessToken,
       refreshToken: refreshToken,
     };
+  }
+
+  // Generate Access Token from payload
+  async getAccessToken(payload: JwtPayload) {
+    return await this.jwtService.sign(payload, {
+      expiresIn: JWT_CONFIG.signExpiresIn,
+    });
   }
 
   // make refresh invalidate

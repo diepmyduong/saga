@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpStatus } from "@nestjs/common";
+import { BaseException } from "./exception.base";
 
-export class PermissionException extends HttpException {
+export class PermissionException extends BaseException {
   constructor() {
-    super('Permission Deny', HttpStatus.NOT_ACCEPTABLE);
+    super("401", "Permission Deny", HttpStatus.NOT_ACCEPTABLE);
   }
 }

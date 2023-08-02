@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
+import { HttpStatus } from "@nestjs/common";
+import { BaseException } from "./exception.base";
 
-export class NotFoundException extends HttpException {
-  constructor(message?: string) {
-    super(message || "Not Found", HttpStatus.NOT_FOUND);
+export class NotFoundException extends BaseException {
+  constructor(code: string, message?: string) {
+    super(code, message || "Not Found", HttpStatus.NOT_FOUND);
   }
 }

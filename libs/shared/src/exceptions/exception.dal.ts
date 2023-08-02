@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
+import { HttpStatus } from "@nestjs/common";
+import { BaseException } from "./exception.base";
 
-export class DalException extends HttpException {
+export class DalException extends BaseException {
   constructor(message: string) {
-    super(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    super("1000", message, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

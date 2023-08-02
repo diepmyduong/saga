@@ -24,11 +24,11 @@ export class ApiLoginUserUsecase extends BaseUsecase {
     // validate username and password
     const jwtPayload = await this.authService.authenticateByPassword(cmd.username, cmd.password);
 
-    // get jwt token
-    const { accessToken, refreshToken: refreshToken } = await this.authService.getJwtToken(jwtPayload);
+    // get jwt tokenx
+    const { accessToken, refreshToken } = await this.authService.getJwtToken(jwtPayload);
 
     if (options.res) {
-      setTokensToCookie(options.res, accessToken, refreshToken);
+      setTokensToCookie(options.res, "user", accessToken);
     }
 
     return {

@@ -10,3 +10,9 @@ export type RefreshTokenPayload = {
   userId: string; // user id
   hash: string; // hash of random password
 };
+
+export type ApplicationPayload = JwtPayload & {
+  role: "app";
+  appId: string;
+  appRole: "read" | "write" | "manager";
+};

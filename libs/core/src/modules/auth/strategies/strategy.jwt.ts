@@ -3,11 +3,16 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Request } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { JwtPayload, RefreshTokenPayload } from "../base/auth.jwt.interface";
+import { RefreshTokenPayload } from "../base/auth.jwt.interface";
 import { CoreAuthService } from "../core.auth.service";
 
 const ExtractJwtFromCookie = (schema: string) => (req: Request) => {
   return req.cookies[schema];
+};
+const ExtractJwtByHeaderRole = () => (req: Request) => {
+  const role = req.headers["x-role"] || "user";
+  let schema = "x-" + role + "-token";
+  return req.cookies[schema] || req.headers[schema];
 };
 
 @Injectable()
@@ -17,11 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
       // extract jwt from cookie or header
       jwtFromRequest: ExtractJwt.fromExtractors([
         // extract from cookie
-        ExtractJwtFromCookie("x-token"),
-        // extract from auth header bearer token
-        ExtractJwt.fromAuthHeaderAsBearerToken(),
-        // extract from header x-token
-        ExtractJwt.fromAuthHeaderWithScheme("x-token"),
+        ExtractJwtByHeaderRole(),
       ]),
       ignoreExpiration: false,
       secretOrKey: JWT_CONFIG.secret,
@@ -32,13 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     if (!payload.userId || !payload.username || !payload.role) {
       throw new PermissionException();
     }
-    return {
-      userId: payload.userId,
-      username: payload.username,
-      role: payload.role,
-      posId: payload.posId,
-      scopeHash: payload.scopeHash,
-    } as JwtPayload;
+    return payload;
   }
 }
 

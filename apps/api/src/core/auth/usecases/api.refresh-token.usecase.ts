@@ -19,7 +19,7 @@ export class ApiRefreshTokenUsecase extends BaseUsecase {
     const { accessToken, refreshToken, user } = await this.authService.refreshJwtToken(cmd.refreshTokenPayload);
 
     if (options.res) {
-      setTokensToCookie(options.res, accessToken, refreshToken);
+      setTokensToCookie(options.res, "user", accessToken);
     }
 
     return {

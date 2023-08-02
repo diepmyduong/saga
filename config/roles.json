@@ -4,5 +4,10 @@
     ["allow", "manage", "user_own"],
     ["allow", "findAll findOne", "catalog"],
     ["allow", "create", "application"]
+  ],
+  "app": [
+    ["allow", "manage", "user_own"],
+    ["allow", "findAll findOne", "catalog"],
+    ["allow", "manage", "application_own"]
   ]
 }
