@@ -1,10 +1,11 @@
 import { BaseRepository } from "@app/dal";
-import { BaseEntity, FindAllArgs } from "@app/shared";
+import { FindAllArgs } from "@app/shared";
 import { Logger, Type } from "@nestjs/common";
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { BaseObject } from "apps/api/src/shared";
 
 export function BaseCRUDResolver<
-  Entity extends BaseEntity,
+  Entity extends BaseObject,
   CreateDto extends Type<unknown>,
   UpdateDto extends Type<unknown>,
   EdgesType extends Type<unknown>

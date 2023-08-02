@@ -7,24 +7,13 @@ import {
   MemoryManagerModule,
 } from "@app/core";
 import { DalModule } from "@app/dal/dal.module";
-import { GRAPHQL_CONFIG, MEMORY_CONFIG, RATE_LIMIT_CONFIG } from "@app/shared";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { GraphQLModule } from "@nestjs/graphql";
+import { MEMORY_CONFIG, RATE_LIMIT_CONFIG } from "@app/shared";
 import { ThrottlerModule } from "@nestjs/throttler";
-import { Request, Response } from "express";
+import { ApiGraphqlModule } from "./shared";
 
 export const ImportModules = [
   // Config GraphQL Module
-  GraphQLModule.forRoot<ApolloDriverConfig>({
-    driver: ApolloDriver,
-    playground: GRAPHQL_CONFIG.playground ? { settings: { "request.credentials": "include" } } : false,
-    path: GRAPHQL_CONFIG.path,
-    sortSchema: false,
-    autoSchemaFile: "schema.gql",
-    buildSchemaOptions: { dateScalarMode: "isoDate" },
-    context: ({ req, res }: { req: Request; res: Response }) => ({ req, res }),
-    includeStacktraceInErrorResponses: false,
-  }),
+  ApiGraphqlModule,
 
   // Connect Tenant Database
   DalModule.forRoot(),

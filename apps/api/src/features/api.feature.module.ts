@@ -1,6 +1,7 @@
-import { DynamicModule, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
+import { ApiApplicationModule } from "./application";
 
-const SubModules: DynamicModule[] = [];
+const SubModules = [ApiApplicationModule];
 
 @Module({
   imports: [...SubModules],

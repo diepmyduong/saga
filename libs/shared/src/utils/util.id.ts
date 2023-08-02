@@ -10,4 +10,9 @@ export class IdUtil {
   static id64() {
     return crypto.randomBytes(32).toString("hex");
   }
+
+  // generate n char id
+  static id(num: number) {
+    return crypto.randomBytes(num / 2).toString("hex");
+  }
 }

@@ -2,6 +2,7 @@
   "ADMIN": [["allow", "manage", "all"]],
   "USER": [
     ["allow", "manage", "user_own"],
-    ["allow", "findAll findOne", "catalog"]
+    ["allow", "findAll findOne", "catalog"],
+    ["allow", "create", "application"]
   ]
 }
