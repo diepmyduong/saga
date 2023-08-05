@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Request } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
+import { JwtPayload } from "../types";
 
 const ExtractJwtByHeaderRole = () => (req: Request) => {
   const role = req.headers["x-role"] || "user";
@@ -24,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload: JwtPayload) {
     if (!payload.userId || !payload.username || !payload.role) {
       throw new PermissionException();
     }

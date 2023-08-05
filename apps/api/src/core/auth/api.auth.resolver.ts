@@ -1,5 +1,4 @@
-import { GqlRefreshTokenAuthGuard, LoginUserCommand, Public, RefreshUserTokenCommand } from "@app/core";
-import { UseGuards } from "@nestjs/common";
+import { LoginUserCommand, Public, RefreshUserTokenCommand } from "@app/core";
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import GraphQLJSON from "graphql-type-json";
 
@@ -34,7 +33,6 @@ export class ApiAuthResolver {
 
   // Request refresh token
   @Public()
-  @UseGuards(GqlRefreshTokenAuthGuard)
   @Mutation(() => GraphQLJSON, { name: "refreshToken" })
   async refreshToken(@Args("refreshToken") refreshToken: string, @ExpressRes() res: Response) {
     const result = await this.commandBus.execute(

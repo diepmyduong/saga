@@ -31,16 +31,3 @@ export class JwtAuthGuard extends AuthGuard("jwt") implements CanActivate {
 
 @Injectable()
 export class GqlJwtAuthGuard extends GqlGuard(JwtAuthGuard) {}
-
-@Injectable()
-export class RefreshTokenAuthGuard extends AuthGuard("refresh-token") implements CanActivate {
-  handleRequest(err: Error, user: any, info: any) {
-    if (err || !user) {
-      throw err || new UnauthorizedException();
-    }
-    return user;
-  }
-}
-
-@Injectable()
-export class GqlRefreshTokenAuthGuard extends GqlGuard(RefreshTokenAuthGuard) {}
