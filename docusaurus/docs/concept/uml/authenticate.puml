@@ -1,0 +1,27 @@
+@startuml
+
+' The class diagram for authentication
+
+class AuthService {
+
+}
+
+class AuthResolver {
+    + loginUser()
+}
+
+class LoginUserCommand {
+    username: string
+    password: string
+}
+
+class LoginUserHandler {
+    + execute()
+}
+
+' Resolver push the command to the handler
+AuthResolver ..> LoginUserCommand
+LoginUserCommand ..> LoginUserHandler
+LoginUserHandler ..> AuthService
+
+@enduml

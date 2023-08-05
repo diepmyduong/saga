@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import fs from "fs";
-import { IAuthPolicyService, IRole, IStatement } from "../base/auth.policy.interface";
+import { IAuthPolicyService, IRole, IStatement } from "../types/auth.policy.interface";
 
 export interface IStaticPolicyAdapterOptions {
   // path of json role file. Default: config/roles.json

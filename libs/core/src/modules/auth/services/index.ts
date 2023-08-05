@@ -1,2 +1,2 @@
-export * from "./service.admin-user";
-export * from "./service.static-policy";
+export * from "./admin-user.service";
+export * from "./static-policy.service";

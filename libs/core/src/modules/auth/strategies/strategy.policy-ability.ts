@@ -3,10 +3,10 @@ import { ExecutionContext, Inject, Injectable } from "@nestjs/common";
 
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
-import { JwtPayload } from "../base/auth.jwt.interface";
 import { AppAbility, CaslBuildAbilityStrategy } from "../casl";
-import { AuthScopeService } from "../modules/scope/auth.scope.service";
-import { StaticPolicyAdapter } from "../services/service.static-policy";
+import { StaticPolicyAdapter } from "../services/static-policy.service";
+import { UserScopeService } from "../services/user-scope.service";
+import { JwtPayload } from "../types/auth.jwt.interface";
 
 export interface IPermission {
   effect: "allow" | "deny";
@@ -19,7 +19,7 @@ export class PolicyAbilityStrategy extends CaslBuildAbilityStrategy {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     protected readonly policyService: StaticPolicyAdapter,
-    private readonly authScopeService: AuthScopeService
+    private readonly authScopeService: UserScopeService
   ) {
     super();
   }

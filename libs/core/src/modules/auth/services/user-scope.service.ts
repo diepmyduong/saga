@@ -3,11 +3,11 @@ import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Cache } from "cache-manager";
 import crypto from "crypto";
-import { JwtPayload } from "../../base";
+import { JwtPayload } from "../types";
 
 @Injectable()
-export class AuthScopeService {
-  private logger = new Logger(AuthScopeService.name);
+export class UserScopeService {
+  private logger = new Logger(UserScopeService.name);
   constructor(private readonly userRepo: UserRepository, @Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   // get scope from jwt payload

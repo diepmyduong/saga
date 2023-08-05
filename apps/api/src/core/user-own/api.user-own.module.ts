@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
+import { CqrsModule } from "@nestjs/cqrs";
 import { ApiUserOwnResolver } from "./api.user-own.resolver";
-import { LogoutUserUsecase, UserGetMeUsecase, UserUpdateProfileUsecase } from "./usecases";
+import { UserGetMeUsecase, UserUpdateProfileUsecase } from "./usecases";
 
 @Module({
-  imports: [],
-  providers: [ApiUserOwnResolver, LogoutUserUsecase, UserGetMeUsecase, UserUpdateProfileUsecase],
+  imports: [CqrsModule],
+  providers: [ApiUserOwnResolver, UserGetMeUsecase, UserUpdateProfileUsecase],
 })
 export class ApiUserOwnModule {}

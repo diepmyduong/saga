@@ -5,15 +5,18 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { CaslAbilityFactory } from "./casl";
 import { CoreAuthService } from "./core.auth.service";
-import { AuthScopeModule } from "./modules";
+
+import { LoginUserHandler, LogoutUserCommand, RefreshUserTokenHandler } from "./commands";
 import { AdminUserService } from "./services";
-import { StaticPolicyAdapter } from "./services/service.static-policy";
-import { JwtStrategy, PolicyAbilityStrategy, RefreshTokenStrategy } from "./strategies";
+import { StaticPolicyAdapter } from "./services/static-policy.service";
+import { UserScopeService } from "./services/user-scope.service";
+import { JwtStrategy, PolicyAbilityStrategy } from "./strategies";
+
+const CommandHandlers = [LoginUserHandler, RefreshUserTokenHandler, LogoutUserCommand];
 
 @Module({
   imports: [
     CacheModule.register(),
-    AuthScopeModule,
     UserModule,
     JwtModule.register({
       secret: JWT_CONFIG.secret,
@@ -23,11 +26,12 @@ import { JwtStrategy, PolicyAbilityStrategy, RefreshTokenStrategy } from "./stra
   providers: [
     CaslAbilityFactory,
     JwtStrategy,
-    RefreshTokenStrategy,
     PolicyAbilityStrategy,
     StaticPolicyAdapter,
     CoreAuthService,
     AdminUserService,
+    UserScopeService,
+    ...CommandHandlers,
   ],
   exports: [CoreAuthService, CaslAbilityFactory],
 })
