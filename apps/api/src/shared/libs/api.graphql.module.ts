@@ -1,7 +1,14 @@
-import { GRAPHQL_CONFIG } from "@app/shared";
+import { BaseException, GRAPHQL_CONFIG } from "@app/shared";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
+import { GraphQLError } from "graphql";
+
+function isDerivedFrom(child: any, parent: any): boolean {
+  if (child === parent) return true;
+  if (child == null) return false;
+  return isDerivedFrom(Object.getPrototypeOf(child), parent);
+}
 
 @Module({
   imports: [
@@ -12,12 +19,26 @@ import { GraphQLModule } from "@nestjs/graphql";
       sortSchema: false,
       autoSchemaFile: "schema.gql",
       buildSchemaOptions: { dateScalarMode: "isoDate" },
-      context: ({ req, res }: { req: Request; res: Response }) => ({ req, res }),
       includeStacktraceInErrorResponses: false,
+      autoTransformHttpErrors: true,
+      status400ForVariableCoercionErrors: true,
+      context: ({ req, res }: { req: Request; res: Response }) => ({ req, res }),
       formatError: (formttedError, error) => {
-        // console.log('formatedError', formttedError);
-        // console.log('error', error);
-        return formttedError;
+        if (error instanceof GraphQLError && error.originalError instanceof BaseException) {
+          return {
+            code: error.originalError.code,
+            message: error.originalError.message,
+            path: formttedError.path,
+            httpCode: error.originalError.getStatus(),
+          };
+        } else {
+          return {
+            code: formttedError.extensions?.code || "INTERNAL_SERVER_ERROR",
+            message: formttedError.message,
+            path: formttedError.path,
+            httpCode: 500,
+          };
+        }
       },
     }),
   ],
