@@ -3,4 +3,5 @@ export enum ResourceEnum {
   USER = "user",
   USER_OWN = "user_own",
   APPLICATION = "application",
+  APPLOCATION_OWN = "application_own",
 }

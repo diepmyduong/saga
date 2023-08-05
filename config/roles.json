@@ -1,8 +1,12 @@
 {
-  "ADMIN": [["allow", "manage", "all"]],
+  "ADMIN": [
+    ["allow", "manage", "all"],
+    ["deny", "manage", "application_own"]
+  ],
   "USER": [
     ["allow", "manage", "user_own"],
     ["allow", "findAll findOne", "catalog"],
-    ["allow", "create", "application"]
+    ["allow", "create", "application"],
+    ["deny", "manage", "application_own"]
   ]
 }

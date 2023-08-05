@@ -1,6 +1,7 @@
 import { UserCommand } from "@app/core";
-import { ApplicationRepository } from "@app/dal";
-import { IdUtil } from "@app/shared";
+import { ApplicationRepository, UserRepository } from "@app/dal";
+import { AppUserRole, AppUserStatus } from "@app/dal/repositories/core/application/application.interface";
+import { ExecutionTime, IdUtil, NotFoundException } from "@app/shared";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { IsNotEmpty } from "class-validator";
 import slugify from "slugify";
@@ -12,17 +13,32 @@ export class CreateApplicationCommand extends UserCommand {
 
 @CommandHandler(CreateApplicationCommand)
 export class CreateApplicationHandler implements ICommandHandler<CreateApplicationCommand> {
-  constructor(private appRepo: ApplicationRepository) {}
+  constructor(private appRepo: ApplicationRepository, private userRepo: UserRepository) {}
 
+  @ExecutionTime("Tạo ứng dụng")
   async execute(command: CreateApplicationCommand): Promise<any> {
     // generate application code from name
     const code = await this.generateCodeFromName(command.name);
+
+    // get user info
+    const user = await this.userRepo.findById(command.userId);
+    if (!user) {
+      throw new NotFoundException();
+    }
 
     // save application
     const entity = await this.appRepo.create({
       code: code,
       name: command.name,
       ownerId: command.userId,
+      users: [
+        {
+          email: user.email,
+          role: AppUserRole.OWNER,
+          userId: user._id,
+          status: AppUserStatus.ACTIVE,
+        },
+      ],
     });
 
     return entity;

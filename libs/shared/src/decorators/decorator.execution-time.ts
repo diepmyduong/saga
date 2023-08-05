@@ -1,6 +1,6 @@
 import { Logger } from "@nestjs/common";
 
-export function ExecutionTime(message: string, logLevel: "log" | "debug" = "debug") {
+export function ExecutionTime(message?: string, logLevel: "log" | "debug" = "debug") {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 

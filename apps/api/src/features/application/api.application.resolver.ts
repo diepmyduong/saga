@@ -4,9 +4,10 @@ import { FindAllArgs } from "@app/shared";
 
 import { CommandBus } from "@nestjs/cqrs";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import GraphQLJSON from "graphql-type-json";
 import { ResourceEnum } from "../../shared";
 import { Application, ApplicationEdges, CreateApplicationDto } from "./api.application.dto";
-import { CreateApplicationCommand } from "./commands";
+import { CreateApplicationCommand, JoinApplicationCommand } from "./commands";
 
 @Resource(ResourceEnum.APPLICATION)
 @Resolver()
@@ -40,5 +41,10 @@ export class ApiApplicationResolver extends BaseCRUDResolver(Application, {
       data: data,
       pagination: pagination,
     };
+  }
+
+  @Mutation(() => GraphQLJSON, { name: "joinApplication" })
+  async join(@Args("inviteToken") inviteToken: string, @CurrentUser() user: JwtPayload) {
+    return this.commandBus.execute(JoinApplicationCommand.create({ userId: user.userId, inviteToken: inviteToken }));
   }
 }

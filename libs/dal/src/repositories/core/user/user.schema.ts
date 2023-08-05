@@ -16,8 +16,8 @@ const schema = new Schema(
       },
       default: {},
     },
+    email: { type: String, trim: true, validate: StringValidator.email(), require: true },
     // ==== Optional Field
-    email: { type: String, trim: true, validate: StringValidator.email() },
     phone: { type: String, trim: true },
     avatar: { type: String, trim: true },
     // refresh token

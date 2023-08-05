@@ -1,6 +1,6 @@
+import { getRequest } from "@app/shared";
 import { AbilityBuilder, AbilityClass, PureAbility, fieldPatternMatcher, mongoQueryMatcher } from "@casl/ability";
 import { ExecutionContext, Logger } from "@nestjs/common";
-import { GqlExecutionContext } from "@nestjs/graphql";
 import { AppAbility } from "./casl.app-ability";
 
 export interface ICaslBuildAbilityStrategy {
@@ -39,17 +39,7 @@ export abstract class CaslBuildAbilityStrategy implements ICaslBuildAbilityStrat
   }
 
   getRequest(context: ExecutionContext) {
-    let req = context.switchToHttp().getRequest();
-    if (!req) {
-      req = GqlExecutionContext.create(context).getContext().req;
-    }
-    if (!req) {
-      req = context.switchToRpc().getContext().req;
-    }
-    if (!req) {
-      req = context.switchToWs().getClient().handshake;
-    }
-    return req;
+    return getRequest(context);
   }
 
   createBuilder() {

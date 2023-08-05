@@ -16,10 +16,10 @@ export class UserEntity extends TimestampEntity {
   scopes: string[];
   // Thời gian
   times: UserTimes;
+  //  'Email'
+  email: string;
 
   // ==== Optional Field
-  //  'Email'
-  email?: string;
   //  'Điện thoại'
   phone?: string;
   //  'Ảnh đại diện'

@@ -1,1 +1,5 @@
-{}
+{
+  "app:read": [],
+  "app:write": [],
+  "app:owner": [["allow", "manage", "application_own"]]
+}
