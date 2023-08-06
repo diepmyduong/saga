@@ -15,7 +15,7 @@ export class PoliciesGuard implements CanActivate {
   constructor(private reflector: Reflector, private caslAbilityFactory: CaslAbilityFactory) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const resourceMeta = this.reflector.getAllAndOverride(RESOURCE_META, [context.getClass(), context.getHandler()]);
+    const resourceMeta = this.reflector.getAllAndOverride(RESOURCE_META, [context.getHandler(), context.getClass()]);
     if (!resourceMeta) return true;
 
     const req = this.getRequest(context);
@@ -23,7 +23,6 @@ export class PoliciesGuard implements CanActivate {
     if (!user) throw new UnauthorizedException();
 
     const ability = await this.caslAbilityFactory.createByStrategy(PolicyAbilityStrategy, context);
-
     const canAccess = ability.can(context.getHandler().name, resourceMeta.resource);
     if (!canAccess) {
       throw new PermissionException();
