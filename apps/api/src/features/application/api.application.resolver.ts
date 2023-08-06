@@ -1,13 +1,14 @@
-import { BaseCRUDResolver, CurrentUser, JwtPayload, Resource } from "@app/core";
-import { ApplicationRepository } from "@app/dal";
+import { AppId, BaseCRUDResolver, CurrentUser, JwtPayload, Resource } from "@app/core";
+import { AppUserStatus, ApplicationRepository } from "@app/dal";
 import { FindAllArgs } from "@app/shared";
 
 import { CommandBus } from "@nestjs/cqrs";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import GraphQLJSON from "graphql-type-json";
 import { ResourceEnum } from "../../shared";
+import { InviteApplicationUserInput } from "./api.application-own.dto";
 import { Application, ApplicationEdges, CreateApplicationDto } from "./api.application.dto";
-import { CreateApplicationCommand, JoinApplicationCommand } from "./commands";
+import { CreateApplicationCommand, InviteApplicationUserCommand, JoinApplicationCommand } from "./commands";
 
 @Resource(ResourceEnum.APPLICATION)
 @Resolver()
@@ -30,7 +31,12 @@ export class ApiApplicationResolver extends BaseCRUDResolver(Application, {
     const { data, pagination } = await this.appRepo.findWithPagination({
       filter: {
         ...filter,
-        ownerId: user.userId,
+        users: {
+          $elemMatch: {
+            userId: user.userId,
+            status: AppUserStatus.ACTIVE,
+          },
+        },
       },
       page: page,
       limit: limit,
@@ -43,8 +49,37 @@ export class ApiApplicationResolver extends BaseCRUDResolver(Application, {
     };
   }
 
+  // get app info
+  @Resource(ResourceEnum.APPLOCATION_OWN)
+  @Query(() => Application, { name: "getApplication" })
+  async getApplication(@AppId() appId: string) {
+    return this.appRepo.findById(appId);
+  }
+
+  // invite app user
+  @Resource(ResourceEnum.APPLOCATION_OWN)
+  @Mutation(() => GraphQLJSON, { name: "inviteApplicationUser" })
+  async invite(
+    @Args("input") input: InviteApplicationUserInput,
+    @CurrentUser() user: JwtPayload,
+    @AppId() appId: string
+  ) {
+    return this.commandBus.execute(
+      InviteApplicationUserCommand.create({
+        userId: user.userId,
+        appId: appId,
+        email: input.email,
+        role: input.role,
+      })
+    );
+  }
+
+  // join application
+  @Resource(ResourceEnum.USER_OWN)
   @Mutation(() => GraphQLJSON, { name: "joinApplication" })
   async join(@Args("inviteToken") inviteToken: string, @CurrentUser() user: JwtPayload) {
     return this.commandBus.execute(JoinApplicationCommand.create({ userId: user.userId, inviteToken: inviteToken }));
   }
+
+  //
 }

@@ -2,6 +2,7 @@ import { UserCommand } from "@app/core";
 import { ApplicationRepository, UserRepository } from "@app/dal";
 import { AppUserStatus } from "@app/dal/repositories/core/application/application.interface";
 import { ForbiddenException, NotFoundException } from "@app/shared";
+import { Logger } from "@nestjs/common";
 
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { JwtService } from "@nestjs/jwt";
@@ -19,6 +20,7 @@ const Exceptions = {
 
 @CommandHandler(JoinApplicationCommand)
 export class JointApplicationHandler implements ICommandHandler<JoinApplicationCommand> {
+  private logger = new Logger(JointApplicationHandler.name);
   constructor(
     private jwtService: JwtService,
     private appRepo: ApplicationRepository,
@@ -72,12 +74,13 @@ export class JointApplicationHandler implements ICommandHandler<JoinApplicationC
         );
       } else {
         // update app user status
-        const userIndex = app.users.findIndex((u) => u.email === payload.email);
+        const userIndex = app.users.findIndex((u) => u.email === user.email);
+
         await this.appRepo.updateOne(
           { _id: app._id },
           {
             $set: {
-              [`users[${userIndex}]`]: {
+              [`users.${userIndex}`]: {
                 email: payload.email,
                 role: payload.role,
                 status: AppUserStatus.ACTIVE,

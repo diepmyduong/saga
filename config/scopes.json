@@ -1,5 +1,5 @@
 {
-  "app:read": [],
-  "app:write": [],
+  "app:read": [["allow", "getApplication", "application_own"]],
+  "app:write": [["allow", "getApplication", "application_own"]],
   "app:owner": [["allow", "manage", "application_own"]]
 }

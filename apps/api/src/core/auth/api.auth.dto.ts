@@ -33,3 +33,15 @@ export class LoginResponse {
   @Field(() => GraphQLJSON)
   user: JwtPayload;
 }
+
+@InputType()
+export class RegisterUserInput {
+  @Field()
+  username: string;
+  @Field()
+  password: string;
+  @Field()
+  email: string;
+  @Field()
+  name: string;
+}

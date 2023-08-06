@@ -1,4 +1,4 @@
-import { LoginUserCommand, Public, RefreshUserTokenCommand } from "@app/core";
+import { LoginUserCommand, Public, RefreshUserTokenCommand, RegisterUserCommand } from "@app/core";
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import GraphQLJSON from "graphql-type-json";
 
@@ -7,7 +7,8 @@ import { Throttle } from "@nestjs/throttler";
 import { Response } from "express";
 
 import { CommandBus } from "@nestjs/cqrs";
-import { LoginResponse, LoginUserInput } from "./api.auth.dto";
+import { User } from "../../shared";
+import { LoginResponse, LoginUserInput, RegisterUserInput } from "./api.auth.dto";
 import { setTokensToCookie } from "./utils";
 
 @Resolver()
@@ -54,5 +55,12 @@ export class ApiAuthResolver {
   @Mutation(() => String, { name: "forgetPassword" })
   async forgetPassword(@Args("username") username: string) {
     return {};
+  }
+
+  // Register user
+  @Public() // allow public access
+  @Mutation(() => User, { name: "registerUser" })
+  async registerUser(@Args("input") input: RegisterUserInput) {
+    return await this.commandBus.execute(RegisterUserCommand.create(input));
   }
 }
