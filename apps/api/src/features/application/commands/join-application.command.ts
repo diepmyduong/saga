@@ -65,10 +65,12 @@ export class JointApplicationHandler implements ICommandHandler<JoinApplicationC
           { _id: app._id },
           {
             $push: {
-              email: payload.email,
-              role: payload.role,
-              status: AppUserStatus.ACTIVE,
-              userId: cmd.userId,
+              users: {
+                email: user.email,
+                role: payload.role,
+                status: AppUserStatus.ACTIVE,
+                userId: cmd.userId,
+              },
             },
           }
         );
@@ -81,7 +83,7 @@ export class JointApplicationHandler implements ICommandHandler<JoinApplicationC
           {
             $set: {
               [`users.${userIndex}`]: {
-                email: payload.email,
+                email: user.email,
                 role: payload.role,
                 status: AppUserStatus.ACTIVE,
                 userId: cmd.userId,

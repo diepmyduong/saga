@@ -8,7 +8,12 @@ import GraphQLJSON from "graphql-type-json";
 import { ResourceEnum } from "../../shared";
 import { InviteApplicationUserInput } from "./api.application-own.dto";
 import { Application, ApplicationEdges, CreateApplicationDto } from "./api.application.dto";
-import { CreateApplicationCommand, InviteApplicationUserCommand, JoinApplicationCommand } from "./commands";
+import {
+  CreateApplicationCommand,
+  InviteApplicationUserCommand,
+  JoinApplicationCommand,
+  RemoveApplicationUserCommand,
+} from "./commands";
 
 @Resource(ResourceEnum.APPLICATION)
 @Resolver()
@@ -81,5 +86,12 @@ export class ApiApplicationResolver extends BaseCRUDResolver(Application, {
     return this.commandBus.execute(JoinApplicationCommand.create({ userId: user.userId, inviteToken: inviteToken }));
   }
 
-  //
+  // remove user from application
+  @Resource(ResourceEnum.APPLOCATION_OWN)
+  @Mutation(() => GraphQLJSON, { name: "removeApplicationUser" })
+  async removeUser(@Args("email") email: string, @AppId() appId: string, @CurrentUser() user: JwtPayload) {
+    return this.commandBus.execute(
+      RemoveApplicationUserCommand.create({ userId: user.userId, appId: appId, email: email })
+    );
+  }
 }
